@@ -21,12 +21,10 @@ public class Commiter {
     private final BufferedWriter console;
     private final boolean init;
     private final boolean pull;
-    private final int requirement;
     private final AtomicInteger integer;
 
     public Commiter(final List<Map.Entry<String, String>> urls, final boolean init, final boolean pull, final int requirement) {
         console = new BufferedWriter(new OutputStreamWriter(System.out));
-        this.requirement = requirement;
         integer = new AtomicInteger(requirement);
         this.init = init;
         this.pull = pull;
@@ -36,7 +34,7 @@ public class Commiter {
             @Override
             public void run() {
                 int i = integer.get();
-                execute(console, "Commits [ " + i + " / " + requirement + " ] ( " + (i * 100d / requirement) + " )");
+                execute(console, "Commits [ " + i + " / " + requirement + " ] ( " + ((requirement - i) * 100d / requirement) + " )");
             }
         }, 1000, 1000);
     }

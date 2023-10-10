@@ -29,5 +29,6 @@ bin/
 .DS_Store
 
 Config.java
-Main.java
+Commit1.java
+Commit2.java
 Push.java
