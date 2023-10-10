@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="eclipse.jgit" type="repository">
+    <properties maven-id="org.eclipse.jgit:org.eclipse.jgit:6.7.0.202309050840-r" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/eclipse/jgit/org.eclipse.jgit/6.7.0.202309050840-r/org.eclipse.jgit-6.7.0.202309050840-r.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/googlecode/javaewah/JavaEWAH/1.2.3/JavaEWAH-1.2.3.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/commons-codec/commons-codec/1.16.0/commons-codec-1.16.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
