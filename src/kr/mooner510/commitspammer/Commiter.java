@@ -7,6 +7,7 @@ import me.tongfei.progressbar.ProgressBarStyle;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
+import org.eclipse.jgit.errors.RepositoryNotFoundException;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
@@ -123,6 +124,9 @@ public class Commiter {
                 if (pa <= 0) break;
                 try (Git git = Git.open(gitDir)) {
                     git.commit().setMessage("dummy-commit").setCommitter(Config.userName, Config.email).setAuthor(Config.userName, Config.email).setCredentialsProvider(cp).call();
+                } catch (RepositoryNotFoundException e) {
+                    execute(console, String.format("\n\t>> Hey! Check if you have cloned the repository named %s. How about setting 'init' variable to 'true'?", url.getKey()));
+                    Runtime.getRuntime().exit(404);
                 } catch (IOException | GitAPIException e) {
                     e.printStackTrace();
                     Runtime.getRuntime().exit(404);
