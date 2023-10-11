@@ -53,7 +53,7 @@ public class Config {
 ```
 
 ### 4. Build and Run
-Create new class for Run. There is an **example**.
+Create new class for run. There is an **example**.
 
 #### Make 20000 commit using all repositories without cloning repositories:
 
@@ -79,7 +79,7 @@ public class Main {
 }
 ```
 
-#### Push all repositories every 20 second:
+#### Push all commits made by the Commiter class to all repositories every 20 seconds:
 
 ```java
 import kr.mooner510.commitspammer.Pusher;
