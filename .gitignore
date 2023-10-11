@@ -28,7 +28,7 @@ bin/
 ### Mac OS ###
 .DS_Store
 
-Config.java
+Configb.java
 Commit1.java
 Commit2.java
 Push.java
