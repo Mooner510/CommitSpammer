@@ -48,6 +48,8 @@ public class Commiter {
             public void run() {
                 int n = integer.get();
                 if (n <= 0) {
+                    progressBar.stepTo(requirement);
+                    progressBar.refresh();
                     progressBar.close();
                     timer.cancel();
                     return;
