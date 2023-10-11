@@ -20,14 +20,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Commiter {
     private final BufferedWriter console;
     private final boolean init;
-    private final boolean pull;
     private final AtomicInteger integer;
 
-    public Commiter(final List<Map.Entry<String, String>> urls, final boolean init, final boolean pull, final int requirement) {
+    public Commiter(final List<Map.Entry<String, String>> urls, final boolean init, final int requirement) {
         console = new BufferedWriter(new OutputStreamWriter(System.out));
         integer = new AtomicInteger(requirement);
         this.init = init;
-        this.pull = pull;
         urls.parallelStream().forEach(this::CreateNewTask);
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
@@ -66,29 +64,23 @@ public class Commiter {
                         git.remoteSetUrl().setRemoteName("origin").setRemoteUri(new URIish(url.getValue())).call();
                         git.checkout().setForced(true).setName("refs/heads/master").call();
                     }
+                    Thread.sleep(1000);
                 }
-                if (!init && pull) {
-                    try (Git git = Git.open(gitDir)) {
-                        git.remoteSetUrl().setRemoteName("origin").setRemoteUri(new URIish(url.getValue())).call();
-//                        git.fetch().call();
-                        git.checkout().setForced(true).setName("origin/master").call();
-//                        git.pull().call();
-                    }
-                }
-                Thread.sleep(100);
                 execute(console, url.getKey() + ": Enqueued\n");
                 Thread.startVirtualThread(() -> {
                     int pa;
                     do {
                         pa = integer.getAndDecrement();
+                        if (pa <= 0) break;
                         try (Git git = Git.open(gitDir)) {
                             git.commit().setMessage("dummy-commit").setCommitter(Config.userName, Config.email).setAuthor(Config.userName, Config.email).setCredentialsProvider(cp).call();
                         } catch (IOException | GitAPIException e) {
                             e.printStackTrace();
                         }
-                    } while (pa > 0);
+                    } while (true);
+                    execute(console, url.getKey() + ": Dequeued\n");
                 });
-            } catch (InterruptedException | GitAPIException | IOException | URISyntaxException e) {
+            } catch (InterruptedException | GitAPIException | URISyntaxException e) {
                 e.printStackTrace();
             }
         });
