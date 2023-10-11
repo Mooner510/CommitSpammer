@@ -79,18 +79,6 @@ public class Main {
 }
 ```
 
-#### Clone all repositories and make 60000 commit using all repositories:
-
-```java
-import kr.mooner510.commitspammer.Commiter;
-
-public class Main {
-    public static void main(String[] args) {
-        new Commiter(Config.remotes, true, 60000);
-    }
-}
-```
-
 #### Push all repositories every 20 second:
 
 ```java
