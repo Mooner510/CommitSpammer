@@ -9,5 +9,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="eclipse.jgit" level="project" />
     <orderEntry type="library" name="me.tongfei.progressbar" level="project" />
+    <orderEntry type="library" name="github.seratch.java.time.backport" level="project" />
   </component>
 </module>

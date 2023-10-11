@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="github.seratch.java.time.backport" type="repository">
+    <properties maven-id="com.github.seratch:java-time-backport:1.0.0" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/github/seratch/java-time-backport/1.0.0/java-time-backport-1.0.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
