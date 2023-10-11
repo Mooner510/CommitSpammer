@@ -9,6 +9,8 @@
 <p align="center">Requires <strong>Java 21</strong> or higher to run</p>
 </div>
 
+_Give me star if you like this project_
+
 ## Getting Started
 ### 1. Fork or Clone this Repository
 You can clone this repository as a .zip file [here](https://github.com/Mooner510/CommitSpammer/archive/refs/heads/master.zip).
