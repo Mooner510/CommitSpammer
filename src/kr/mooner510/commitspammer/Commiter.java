@@ -92,13 +92,17 @@ public class Commiter {
                             .setCredentialsProvider(cp)
                             .call()) {
                         git.remoteSetUrl().setRemoteName("origin").setRemoteUri(new URIish(url.getValue())).call();
-                        git.checkout().setForced(true).setName("refs/heads/master").call();
+                        try {
+                            git.checkout().setForced(true).setName("refs/heads/master").call();
+                        } catch (GitAPIException ignore) {
+                        }
                     }
                 } catch (URISyntaxException e) {
                     execute(console, String.format("\n\t>> Wait. I think this URL (%s) is incorrect. How about asking Google?", url.getValue()));
                     Runtime.getRuntime().exit(404);
                     return;
                 } catch (GitAPIException e) {
+                    e.printStackTrace();
                     execute(console, String.format("\n\t>> Well, does a repository named %s actually exist?", url.getKey()));
                     Runtime.getRuntime().exit(404);
                     return;

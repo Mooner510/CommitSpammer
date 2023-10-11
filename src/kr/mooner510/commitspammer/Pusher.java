@@ -35,8 +35,7 @@ public class Pusher {
                     try (Git git = Git.open(gitDir)) {
                         git.push().setForce(true).setPushAll().setCredentialsProvider(cp).call();
                         execute(console, url.getKey() + ": Push Complete");
-                    } catch (GitAPIException | IOException e) {
-                        e.printStackTrace();
+                    } catch (GitAPIException | IOException ignore) {
                     }
                 }
             }, 0, delay);
