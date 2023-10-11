@@ -6,6 +6,7 @@ import me.tongfei.progressbar.ProgressBarBuilder;
 import me.tongfei.progressbar.ProgressBarStyle;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
@@ -15,7 +16,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.URISyntaxException;
-import java.text.DecimalFormat;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
@@ -46,10 +46,10 @@ public class Commiter {
                 Runtime.getRuntime().exit(404);
             }
         }
-        execute(console, "Commiter is ready for start. Preparing...");
+        execute(console, "\nCommiter is ready for start. Preparing...");
         repositories.parallelStream().map(Utils::toURLEntry).forEach(this::CreateNewTask);
         Timer timer = new Timer();
-        execute(console, "ProgressBar Creation Complete\n\n");
+        execute(console, "ProgressBar Creation Complete.\n");
         ProgressBar progressBar = new ProgressBarBuilder()
                 .setStyle(ProgressBarStyle.COLORFUL_UNICODE_BAR)
                 .setInitialMax(requirement)
@@ -67,6 +67,7 @@ public class Commiter {
                     progressBar.close();
                     timer.cancel();
                     execute(console, String.format("\n\t>> Done! %d commits created.\n", requirement));
+                    Runtime.getRuntime().exit(200);
                     return;
                 }
                 progressBar.stepTo(requirement - n);
@@ -76,14 +77,14 @@ public class Commiter {
     }
 
     public void Setup(final Map.Entry<String, String> url) {
-        execute(console, String.format("\nRepository Setup: %s", url.getKey()));
+        execute(console, String.format("Repository Setup: %s", url.getKey()));
         Thread.startVirtualThread(() -> {
-            try {
-                File dir = new File(Config.repoPath + "/" + url.getKey() + "/");
-                new File(Config.repoPath + "/" + url.getKey()).mkdirs();
-                CredentialsProvider cp = new UsernamePasswordCredentialsProvider(Config.userName, Config.token);
-                if (init) {
-                    execute(console, String.format("Cloning Repository: %s from %s", url.getKey(), url.getValue()));
+            File dir = new File(Config.repoPath + "/" + url.getKey() + "/");
+            new File(Config.repoPath + "/" + url.getKey()).mkdirs();
+            CredentialsProvider cp = new UsernamePasswordCredentialsProvider(Config.userName, Config.token);
+            if (init) {
+                execute(console, String.format("Cloning Repository: %s from %s", url.getKey(), url.getValue()));
+                try {
                     try (Git git = Git.cloneRepository()
                             .setDirectory(dir)
                             .setURI(url.getValue())
@@ -92,13 +93,23 @@ public class Commiter {
                         git.remoteSetUrl().setRemoteName("origin").setRemoteUri(new URIish(url.getValue())).call();
                         git.checkout().setForced(true).setName("refs/heads/master").call();
                     }
-                    execute(console, String.format("Cloned Complete: %s from %s", url.getKey(), url.getValue()));
-                    setup.getAndDecrement();
+                } catch (URISyntaxException e) {
+                    execute(console, String.format("\n\t>> Wait. I think this URL (%s) is incorrect. How about asking Google?", url.getValue()));
+                    Runtime.getRuntime().exit(404);
+                    return;
+                } catch (GitAPIException e) {
+                    execute(console, String.format("\n\t>> Well, does a repository named %s actually exist?", url.getKey()));
+                    Runtime.getRuntime().exit(404);
+                    return;
+                } catch (JGitInternalException e) {
+                    execute(console, String.format("\n\t>> Hey! Check if you have already cloned the repository named %s. How about setting 'init' variable to 'false'?", url.getKey()));
+                    Runtime.getRuntime().exit(404);
+                    return;
                 }
-            } catch (GitAPIException | URISyntaxException e) {
-                e.printStackTrace();
-                Runtime.getRuntime().exit(404);
+                execute(console, String.format("Cloned Complete: %s from %s", url.getKey(), url.getValue()));
             }
+            execute(console, String.format("Setup Complete: %s", url.getKey()));
+            setup.getAndDecrement();
         });
     }
 
