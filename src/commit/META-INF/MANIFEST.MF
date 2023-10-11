@@ -1,3 +1,0 @@
-Manifest-Version: 1.0
-Main-Class: kr.mooner510.commitspammer.Commit1
-Permissions: all-permissions
