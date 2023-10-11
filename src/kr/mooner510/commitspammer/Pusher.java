@@ -39,7 +39,7 @@ public class Pusher {
                         e.printStackTrace();
                     }
                 }
-            }, delay, delay);
+            }, 0, delay);
         });
     }
 }
