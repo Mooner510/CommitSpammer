@@ -28,17 +28,15 @@ public class Pusher {
         Timer timer = new Timer();
         File gitDir = new File(Config.repoPath + "/" + url.getKey() + "/.git");
         CredentialsProvider cp = new UsernamePasswordCredentialsProvider(Config.userName, Config.token);
-        Thread.startVirtualThread(() -> {
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    try (Git git = Git.open(gitDir)) {
-                        git.push().setForce(true).setPushAll().setCredentialsProvider(cp).call();
-                        execute(console, url.getKey() + ": Push Complete");
-                    } catch (GitAPIException | IOException ignore) {
-                    }
+        Thread.startVirtualThread(() -> timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                try (Git git = Git.open(gitDir)) {
+                    git.push().setForce(true).setPushAll().setCredentialsProvider(cp).call();
+                    execute(console, url.getKey() + ": Push Complete");
+                } catch (GitAPIException | IOException ignore) {
                 }
-            }, 0, delay);
-        });
+            }
+        }, 0, delay));
     }
 }
